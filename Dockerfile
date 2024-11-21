@@ -1,5 +1,4 @@
-ARG NGINX_FROM_IMAGE=nginx:mainline
-FROM ${NGINX_FROM_IMAGE} as builder
+FROM nginx AS builder
 
 ARG ENABLED_MODULES
 
@@ -69,7 +68,7 @@ RUN apt-get update \
     done \
     && echo "BUILT_MODULES=\"$BUILT_MODULES\"" > /tmp/packages/modules.env
 
-FROM ${NGINX_FROM_IMAGE}
+FROM nginx
 RUN --mount=type=bind,target=/tmp/packages/,source=/tmp/packages/,from=builder \
     apt-get update \
     && . /tmp/packages/modules.env \

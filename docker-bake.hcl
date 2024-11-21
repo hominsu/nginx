@@ -1,9 +1,7 @@
-variable "REPO" {
-  default = "hominsu"
-}
+target "metadata" {}
 
-variable "VERSION" {
-  default = ""
+variable "ENABLED_MODULES"  {
+  default = "geoip2"
 }
 
 group "default" {
@@ -12,21 +10,20 @@ group "default" {
   ]
 }
 
-target "nginx" {
-  context    = "."
-  dockerfile = "Dockerfile"
-  args       = {
-    ENABLED_MODULES = "geoip2"
-  }
-  tags = [
-    notequal("", VERSION) ? "${REPO}/nginx:${VERSION}" : "",
-    "${REPO}/nginx:latest",
-  ]
+target "cross" {
   platforms = [
-    "linux/386",
     "linux/amd64",
-    "linux/arm/v5",
-    "linux/arm/v7",
     "linux/arm64",
   ]
+}
+
+target "nginx" {
+  inherits = ["metadata", "cross"]
+  contexts = {
+    "nginx" = "docker-image://nginx:${target.metadata.args.DOCKER_META_VERSION}"
+  }
+  dockerfile = "Dockerfile"
+  args = {
+    ENABLED_MODULES = "${ENABLED_MODULES}"
+  }
 }

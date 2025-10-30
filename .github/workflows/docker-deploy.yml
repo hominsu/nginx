@@ -57,7 +57,7 @@ jobs:
         id: bake
         uses: docker/bake-action@v5
         env:
-          ENABLED_MODULES: "geoip2"
+          ENABLED_MODULES: "acme geoip2 rtmp"
         with:
           files: |
             docker-bake.hcl

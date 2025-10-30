@@ -1,7 +1,7 @@
 target "metadata" {}
 
-variable "ENABLED_MODULES"  {
-  default = "geoip2 rtmp"
+variable "ENABLED_MODULES" {
+  default = "acme geoip2 rtmp"
 }
 
 group "default" {
